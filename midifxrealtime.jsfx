@@ -1,0 +1,12 @@
+@block
+while (midirecv(offset, msg1, msg23)) (
+    status = msg1 & 0xF0;
+    // Kiểm tra Note On (status = 0x90)
+    status == 0x90 ? (
+        velocity = (msg23 >> 8) & 0x7F;
+        new_velocity = velocity * 2; // Tăng gấp đôi velocity
+        new_velocity > 127 ? new_velocity = 127;
+        msg23 = (msg23 & 0xFF) | (new_velocity << 8);
+    );
+    midisend(offset, msg1, msg23);
+);
